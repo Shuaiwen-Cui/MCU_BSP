@@ -12,9 +12,9 @@ git status
 git commit -m 'auto update Infinity'
 echo '--------commit successfully--------'
 
-git push -f https://github.com/Shuaiwen-Cui/MCU_DEV_STM32.git main
-# git push -u https://github.com/Shuaiwen-Cui/MCU_DEV_STM32.git main
-# git remote add origin https://github.com/Shuaiwen-Cui/MCU_DEV_STM32.git
+git push -f https://github.com/Shuaiwen-Cui/MCU_BSP.git main
+# git push -u https://github.com/Shuaiwen-Cui/MCU_BSP.git main
+# git remote add origin https://github.com/Shuaiwen-Cui/MCU_BSP.git
 # git push -u origin main
 echo '--------push to GitHub successfully--------'
 
