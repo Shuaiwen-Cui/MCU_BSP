@@ -7,7 +7,6 @@
  * @ref ALIENTEK memory.h & memory.c for STM32H7xx
  * @copyright Copyright (c) 2024
  * 
- * ! In this module, the memory banks are managed block by block, and there is a table to record the status of each block.
  * 
  */
 
