@@ -19,6 +19,12 @@ In short, **the drivers are written to be used with CUBEMX generated projects.**
 - ensure the GPIO port and pin macros are included in `main.h` or you can put the in `led.h`.
 - in the drivers, there are LED_X(), LED_X_Toggle(). `X` can be modified to LED number or label according to your project requirements. You can set the label for the GPIO pin in CUUBEMX, and CUUBEMX will generate the macros for you in `main.h`.
 
+## KEY - `ikey`
+- add the `ikey` folder to your project.
+- add the `key.h` and `key.c` files to your project.
+- include the folder path in your project include path.
+- ensure the GPIO port and pin macros are included in `main.h` or you can put the in `key.h`.
+
 ## USART - `iusart`
 - add the `iusart` folder to your project.
 - add the `usart.h` and `usart.c` files to your project.
@@ -40,3 +46,18 @@ In short, **the drivers are written to be used with CUBEMX generated projects.**
 - include the folder path in your project include path.
 - (1) conduct initialization in `main.c`, for example, place `memory_init();` at proper place.
 - (2) use the `memory_alloc()` and `memory_free()` functions in your project.
+
+## SDCARD - `isdcard`
+- add the `isdcard` folder to your project.
+- add the `sdcard.h` and `sdcard.c` files to your project.
+- include the folder path in your project include path.
+- (1) conduct initialization in `main.c`, for example, place `SD_Init();` at proper place.
+- (2) use the SDCARD functions in your project, for example, put `SD_Test();` at proper place for SDCARD test.
+
+Note:: Do not use isdcard together with ifile, as ifile is based on FATFS, which has it own implementation for SD card communication.
+
+## FILE - `ifile`
+- add the `ifile` folder to your project.
+- add the `file.h` and `file.c` files to your project.
+- include the folder path in your project include path.
+- call functions from `file.c` in your project at proper places.
