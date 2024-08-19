@@ -1,4 +1,6 @@
-# HOW TO USE THE DRIVERS
+# HOW TO USE THE DRIVERS - STM32
+
+NOTE: Assuming you are using HAL library and STM32CUBEMX for initialization.
 
 ## NOTES
 This repo assumes that you use **CUBEMX** to generate the project. So, the initialization parts are generally not included in the drivers, which are assumed to be done by CUBEMX. If you do not use CUBEMX, you need to initialize the peripherals yourself.
