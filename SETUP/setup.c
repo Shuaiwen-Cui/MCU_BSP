@@ -1,112 +1,3 @@
-# SETUP
-
-!!! Note
-    'SETUP' refers to node configuration and initialization. This step means to configure the basic information, functional modules of the hardware, controlling the BSP, Peripheral, and other systems. 
-
-## HOW TO SETUP
-
-There is a standalone folder named 'Setup' in both the file structure and the project structure. To modify the configuration for node initialization, you just need to modify the parameters and macros in either the .h or the .c file.
-
-## SETUP SCOPE
-
-'Setup' covers almost all important configurable information, modules, macros, and variables.
-
-## CODE
-
-### setup.h
-
-```c
-/**
- * @file setup.h
- * @author SHUAIWEN CUI (SHUAIWEN001 AT e DOT ntu DOT edu DOT sg)
- * @brief This file is for MCU node configuration and initialization setup.
- * @version 1.0
- * @date 2024-07-12
- *
- * @copyright Copyright (c) 2024
- *
- */
-#ifndef _SETUP_H_
-#define _SETUP_H_
-
-/**
- * @name MACROS
- */
-#define NODE_SUCCESS 0
-#define NODE_FAIL 1
-
-/**
- * @name CONFIGURATION
- * @brief This section is to determine the modules to be included in the project
- * ! This is where you configure the modules to be included in the project
- * @param MODULE_ENABLE_LED //! Enable LED module
- * @param MODULE_ENABLE_USART //! Enable USART
- * @param MODULE_ENABLE_SDRAM //! Enable SDRAM module to use external RAM for computation
- * @param MODULE_ENABLE_MEMORY //! Enable Memory module - for memory management on SDRAM
- * @param MODULE_ENABLE_SDCARD //! Enable SD Card module- for SD Card basic io. !!! This module can not be used together with MODULE_ENABLE_FILE. Better to disable this and use the MODULE_ENABLE_FILE. Enabling FATFS in CubeMX may lead to fail of this option, and you may need to reformat the SD card before using next time.
- * @param MODULE_ENABLE_FILE //! Enable File module - for file operations on SD Card !!! This module can not be used together with MODULE_ENABLE_SDCARD. Better to enable this.
- */
-#define MODULE_ENABLE_LED // Enable LED module
-#define MODULE_ENABLE_USART // Enable USART module
-#define MODULE_ENABLE_SDRAM  // Enable SDRAM module
-#define MODULE_ENABLE_MEMORY // Enable Memory module - for memory management on SDRAM
-// #define MODULE_ENABLE_SDCARD // Enable SD Card module
-#define MODULE_ENABLE_FILE   // Enable File module - for file operations on SD Card
-
-// Necessary Libraries
-#include <stdio.h>
-
-// LED for Status Indication
-#ifdef MODULE_ENABLE_LED
-#include "bsp_led.h"
-#endif
-
-#ifdef MODULE_ENABLE_USART //! Note - Do rember to check the MicroLib option in the project settings
-#include "bsp_usart.h"
-#endif
-
-#ifdef MODULE_ENABLE_SDRAM
-#include "bsp_sdram.h"
-#endif
-
-#ifdef MODULE_ENABLE_MEMORY
-#include "bsp_memory.h"
-#endif
-
-#ifdef MODULE_ENABLE_SDCARD
-#include "bsp_sdcard.h"
-#endif
-
-#ifdef MODULE_ENABLE_FILE
-#include "bsp_file.h"
-#endif
-
-/**
- * @name NODE INFORMATION
- */
-
-/**
- * @name FUNCTION PROTOTYPING
- */
-
-/**
- * @name Node_Init
- * @brief This function is for board initialization, with configurable initialization test incorporated.
- */
-int Node_Init(void);
-
-#ifdef MODULE_ENABLE_USART
-// IO retargetting
-int fputc(int ch, FILE *f);
-int fgetc(FILE *f);
-#endif
-
-#endif /* _SETUP_H_ */
-```
-
-### setup.c
-
-```c
 /**
  * @file setup.c
  * @author SHUAIWEN CUI (SHUAIWEN001 AT e DOT ntu DOT edu DOT sg)
@@ -273,6 +164,32 @@ int Node_Init(void)
     printf("[NODE INITIALIZATION] SD Card FATFS File IO Initialization - DONE.\n\r\n\r");
 #endif
 
+    HAL_Delay(Init_Gap);
+
+#ifdef MODULE_ENABLE_OLED
+    // BSP Initialization - OLED
+    printf("[NODE INITIALIZATION] OLED Initialization - START\n\r");
+
+    OLED_Init();
+    OLED_NewFrame();
+    OLED_DrawImage((128 - (copilotImg.w)) / 2, 0, &copilotImg, OLED_COLOR_NORMAL);
+    OLED_PrintString(32, 64 - 16, "LIFTNODE", &font16x16, OLED_COLOR_NORMAL);
+    OLED_ShowFrame();
+
+    printf("[NODE INITIALIZATION] OLED Initialization - FINISHED\n\r");
+    printf("\n\r");
+#endif
+
+    HAL_Delay(10*Init_Gap);
+
+#ifdef MODULE_ENABLE_MPU6050
+    // BSP Initialization - MPU6050
+    printf("[NODE INITIALIZATION] MPU6050 Initialization - START.\n\r");
+    while (MPU6050_Init(&hi2c2) == 1)
+        ;
+    printf("[NODE INITIALIZATION] MPU6050 Initialization - DONE.\n\r\n\r");
+#endif
+
     return NODE_SUCCESS;
 }
 
@@ -294,4 +211,3 @@ int fgetc(FILE *f)
     return (int)(huart1.Instance->RDR & 0xFF); // Read the received data
 }
 #endif
-```
